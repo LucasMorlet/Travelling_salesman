@@ -7,6 +7,7 @@ INF = 10**15
 
 class Graphe :
 
+    # Constructeurs
     def __init__ ( self, r, nb ) :
         self.region = r
         self.nb_sommets = self.region.getNbVilles()
@@ -20,8 +21,9 @@ class Graphe :
             
         self.genere_matrices()
         self.calcule_distances()
-        self.best_parcours = [ 0, 1, 2 ]
+        self.best_parcours = []
 
+    # Sous-fonctions du constructeur
     def genere_matrices ( self ) :
         liste_routes = self.region.getRoutes()   
         for r in liste_routes :
@@ -42,9 +44,27 @@ class Graphe :
                     if ( ik + kj < ij ) :
                         self.matrice_distances[i][j] = ik + kj
     
+    # Accesseurs
+    def sontVoisins ( self, a, b ) :
+        return self.matrice_adjacence[a][b] < INF
+    
     def getBestParcours ( self ) :
-        return best_parcours
+        return self.best_parcours
         
+    def setBestParcours ( self, nouveau_parcours ) :
+        self.best_parcours = nouveau_parcours
+        
+    def getDistance ( self, ville_A, ville_B ) :
+        return self.matrice_distances[ville_A][ville_B]
+        
+    def getLongueurParcours ( self, parcours ) :
+        longueur = 0
+        for i in range ( len(self.best_parcours) - 1 ) :
+            longueur += self.getDistance ( parcours[i], parcours[i+1] )
+        longueur += self.getDistance ( parcours[ len(self.best_parcours) - 1 ], parcours[0] ) # retour au début
+        return longueur 
+       
+    # Fonctions utilisées pour l'affichage
     def getBestParcoursRoutes ( self ) :
         liste_routes = []
         for i in range ( len(self.best_parcours) - 1 ) :
@@ -57,8 +77,7 @@ class Graphe :
                 for j in range ( len(interm) - 1 ) :
                     a = interm[j]
                     b = interm[j+1] 
-                    liste_routes.append ( self.region.getRoute(a,b) )
-                        
+                    liste_routes.append ( self.region.getRoute(a,b) )                
         
         # Retour au point de départ
         a = self.best_parcours[-1]
@@ -72,9 +91,6 @@ class Graphe :
                 b = interm[j+1] 
                 liste_routes.append ( self.region.getRoute(a,b) )
         return liste_routes
-        
-    def sontVoisins ( self, a, b ) :
-        return self.matrice_adjacence[a][b] < INF
         
     def liste_intermediaire ( self, a, b ) : # Dijkstra
         
@@ -107,7 +123,6 @@ class Graphe :
             liste.append(actuel)
         liste.reverse()
         return liste
-        
     
     def affiche_matrice ( self ) :
         for i in range ( self.nb_sommets ) :
