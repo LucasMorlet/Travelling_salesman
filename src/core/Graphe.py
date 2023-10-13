@@ -34,7 +34,7 @@ class Graphe :
             self.matrice_distances[i][j] = r.getLongueur()
             self.matrice_distances[j][i] = r.getLongueur()
             
-    def calcule_distances ( self ) :
+    def calcule_distances ( self ) : # Floyd-Warshall
         for k in range ( self.nb_sommets ) :
             for i in range ( self.nb_sommets ) :
                 for j in range ( self.nb_sommets ) :
